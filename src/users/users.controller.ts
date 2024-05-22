@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
@@ -22,12 +23,12 @@ export class UsersController {
 
   @Get(':id') // GET /users/:id
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Post() // POST /users
   create(
-    @Body()
+    @Body(ValidationPipe)
     user: {
       name: string;
       email: string;
@@ -40,14 +41,14 @@ export class UsersController {
   @Patch(':id') // PATCH /users/:id
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body()
+    @Body(ValidationPipe)
     userUpdate: {
       name?: string;
       email?: string;
       role?: 'INTERN' | 'ENGINEER' | 'ADMIN';
     },
   ) {
-    return this.usersService.update(+id, userUpdate);
+    return this.usersService.update(id, userUpdate);
   }
 
   @Delete(':id') // DELETE /users/:id
